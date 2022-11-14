@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <http:listener-config name="eapi-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+    <apikit:config name="eapi-config" api="resource::183c2f3b-99a5-48b9-9984-9874e22c6f71:eapi:1.0.0:raml:zip:eapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="eapi-main">
+        <http:listener config-ref="eapi-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="eapi-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="eapi-console">
+        <http:listener config-ref="eapi-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="eapi-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\accountcreated:application\json:eapi-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "Account details updated"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\accountcreated:eapi-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    isTest: true,
+    isApiDeveloper: true,
+    gateway: "AriaSandbox",
+    accountName: "Mulesoft123",
+    accountNumber: "API-31512",
+    billToContact: {
+      address: {
+        city: "CA",
+        country: "US",
+        countryCode: "US",
+        line1: "4115 Broad St",
+        line2: "San Luis Obispo",
+        state: "CA",
+        stateCode: "CA",
+        zipCode: "93401"
+      },
+      email: "TeamPublicAPI45@test.com",
+      phone: "1336867145",
+      name: {
+        firstName: "Mule",
+        lastName: "Soft"
+      }
+    },
+    currencyCode: "USD",
+    isAutoPayEnabled: true,
+    paymentMethod: {
+      cardNumber: "4012001011000771",
+      creditCardType: "Visa",
+      cardExpirationMonth: "02",
+      cardExpirationYear: "2025",
+      securityCode: "837",
+      cardHolderInfo: {
+        address: {
+          city: "CA",
+          country: "US",
+          countryCode: "US",
+          line1: "4115 Broad St",
+          line2: "San Luis Obispo",
+          state: "CA",
+          stateCode: "CA",
+          zipCode: "93401"
+        },
+        name: "mulesoft123",
+        email: "mulesoft123@test.com",
+        firstName: "Mule",
+        middleInitial: "K",
+        lastName: "Soft",
+        isUseSplittedNames: true,
+        phoneNumber: "9878934145"
+      },
+      isDefault: true
+    }
+  }, 
+  {
+    isTest: true,
+    isApiDeveloper: true,
+    gateway: "AriaSandbox",
+    accountName: "Mulesoft1234",
+    accountNumber: "API-315121",
+    billToContact: {
+      address: {
+        city: "CA",
+        country: "US",
+        countryCode: "US",
+        line1: "4115 Broad St",
+        line2: "San Luis Obispo",
+        state: "CA",
+        stateCode: "CA",
+        zipCode: "93401"
+      },
+      email: "TeamPublicAPI45@test.com",
+      phone: "1336867145",
+      name: {
+        firstName: "Mule",
+        lastName: "Soft"
+      }
+    },
+    currencyCode: "USD",
+    isAutoPayEnabled: true,
+    paymentMethod: {
+      cardNumber: "4012001011000771",
+      creditCardType: "Visa",
+      cardExpirationMonth: "02",
+      cardExpirationYear: "2025",
+      securityCode: "837",
+      cardHolderInfo: {
+        address: {
+          city: "CA",
+          country: "US",
+          countryCode: "US",
+          line1: "4115 Broad St",
+          line2: "San Luis Obispo",
+          state: "CA",
+          stateCode: "CA",
+          zipCode: "93401"
+        },
+        name: "mulesoft123",
+        email: "mulesoft123@test.com",
+        firstName: "Mule",
+        middleInitial: "K",
+        lastName: "Soft",
+        isUseSplittedNames: true,
+        phoneNumber: "9878934145"
+      },
+      isDefault: true
+    }
+  }
+]]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\accountcreated:application\json:eapi-config">
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "Account details inserted succesfully"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

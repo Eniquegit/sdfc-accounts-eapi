@@ -8,12 +8,20 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="8ffec890-98b8-4382-8478-3560c8633e8e" >
 		<http:request-connection host="localhost" port="8082" />
 	</http:request-config>
-	<flow name="implementation-eapiFlow" doc:id="16b9c33b-2fc6-4d87-9cef-215d485c5b2c" >
-		<http:request method="GET" doc:name="Request" doc:id="8b2e7906-d437-4c7a-bd97-1d5a1bbc5dfb" config-ref="HTTP_Request_configuration" path="/api/createcomposite">
+	<flow name="get-eapiFlow" doc:id="16b9c33b-2fc6-4d87-9cef-215d485c5b2c" >
+		<http:request method="GET" doc:name="Triggers account get method" doc:id="8b2e7906-d437-4c7a-bd97-1d5a1bbc5dfb" config-ref="HTTP_Request_configuration" path="/api/createcomposite">
 			<http:query-params ><![CDATA[#[{
 	createcomposite: attributes.queryParams.accountNumber
 }]]]></http:query-params>
 		</http:request>
 		<logger level="INFO" doc:name="Logger" doc:id="06d1ff3c-874e-4c4d-bbe2-127048f6eac8" />
+	</flow>
+	<flow name="post-eapiFlow" doc:id="f9b194bd-8ffb-4672-84f4-029029f1b942" >
+		<http:request method="POST" doc:name="Triggers account post method" doc:id="b114110c-20e1-407e-b534-f8a447a8c198" config-ref="HTTP_Request_configuration" path="/api/createcomposite"/>
+		<logger level="INFO" doc:name="Logger" doc:id="f1b7109a-7577-40eb-9349-3485599dd816" />
+	</flow>
+	<flow name="put-eapiFlow" doc:id="e5217506-b986-461d-b744-a896c44f7010" >
+		<http:request method="PUT" doc:name="Triggers account put method" doc:id="d972d344-00d9-40c2-bddf-940483c43cbf" config-ref="HTTP_Request_configuration" path="/api/createcomposite"/>
+		<logger level="INFO" doc:name="Logger" doc:id="72fc5584-6d6c-41cc-9454-c0dd0225e2eb" />
 	</flow>
 </mule>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
     <http:listener-config name="eapi-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
@@ -124,146 +124,12 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\accountcreated:application\json:eapi-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "Account details updated"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="57da309b-ecbb-457a-8155-15899e20f6f7" name="put-eapiFlow"/>
     </flow>
     <flow name="get:\accountcreated:eapi-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    isTest: true,
-    isApiDeveloper: true,
-    gateway: "AriaSandbox",
-    accountName: "Mulesoft123",
-    accountNumber: "API-31512",
-    billToContact: {
-      address: {
-        city: "CA",
-        country: "US",
-        countryCode: "US",
-        line1: "4115 Broad St",
-        line2: "San Luis Obispo",
-        state: "CA",
-        stateCode: "CA",
-        zipCode: "93401"
-      },
-      email: "TeamPublicAPI45@test.com",
-      phone: "1336867145",
-      name: {
-        firstName: "Mule",
-        lastName: "Soft"
-      }
-    },
-    currencyCode: "USD",
-    isAutoPayEnabled: true,
-    paymentMethod: {
-      cardNumber: "4012001011000771",
-      creditCardType: "Visa",
-      cardExpirationMonth: "02",
-      cardExpirationYear: "2025",
-      securityCode: "837",
-      cardHolderInfo: {
-        address: {
-          city: "CA",
-          country: "US",
-          countryCode: "US",
-          line1: "4115 Broad St",
-          line2: "San Luis Obispo",
-          state: "CA",
-          stateCode: "CA",
-          zipCode: "93401"
-        },
-        name: "mulesoft123",
-        email: "mulesoft123@test.com",
-        firstName: "Mule",
-        middleInitial: "K",
-        lastName: "Soft",
-        isUseSplittedNames: true,
-        phoneNumber: "9878934145"
-      },
-      isDefault: true
-    }
-  }, 
-  {
-    isTest: true,
-    isApiDeveloper: true,
-    gateway: "AriaSandbox",
-    accountName: "Mulesoft1234",
-    accountNumber: "API-315121",
-    billToContact: {
-      address: {
-        city: "CA",
-        country: "US",
-        countryCode: "US",
-        line1: "4115 Broad St",
-        line2: "San Luis Obispo",
-        state: "CA",
-        stateCode: "CA",
-        zipCode: "93401"
-      },
-      email: "TeamPublicAPI45@test.com",
-      phone: "1336867145",
-      name: {
-        firstName: "Mule",
-        lastName: "Soft"
-      }
-    },
-    currencyCode: "USD",
-    isAutoPayEnabled: true,
-    paymentMethod: {
-      cardNumber: "4012001011000771",
-      creditCardType: "Visa",
-      cardExpirationMonth: "02",
-      cardExpirationYear: "2025",
-      securityCode: "837",
-      cardHolderInfo: {
-        address: {
-          city: "CA",
-          country: "US",
-          countryCode: "US",
-          line1: "4115 Broad St",
-          line2: "San Luis Obispo",
-          state: "CA",
-          stateCode: "CA",
-          zipCode: "93401"
-        },
-        name: "mulesoft123",
-        email: "mulesoft123@test.com",
-        firstName: "Mule",
-        middleInitial: "K",
-        lastName: "Soft",
-        isUseSplittedNames: true,
-        phoneNumber: "9878934145"
-      },
-      isDefault: true
-    }
-  }
-]]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="9860a02c-45f6-4856-bef4-c18f9c102587" name="get-eapiFlow"/>
     </flow>
     <flow name="post:\accountcreated:application\json:eapi-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "Account details inserted succesfully"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="88f7593d-9480-426a-9cf9-d74f1089f255" name="post-eapiFlow"/>
     </flow>
 </mule>

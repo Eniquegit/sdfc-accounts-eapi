@@ -1,18 +1,20 @@
 {
   "configs": [
-    "account-eapi.xml"
+    "interface-eapi.xml",
+    "implementation-eapi.xml"
   ],
   "secureProperties": [],
   "redeploymentEnabled": true,
   "name": "com.mycompany:account-eapi:1.0.0-SNAPSHOT",
   "minMuleVersion": "4.4.0",
-  "requiredProduct": "MULE",
+  "requiredProduct": "MULE_EE",
   "classLoaderModelLoaderDescriptor": {
     "id": "mule",
     "attributes": {
       "exportedPackages": [],
       "exportedResources": [
-        "account-eapi.xml",
+        "implementation-eapi.xml",
+        "interface-eapi.xml",
         "log4j2.xml"
       ]
     }

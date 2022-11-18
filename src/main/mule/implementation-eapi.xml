@@ -5,23 +5,41 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
-	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="8ffec890-98b8-4382-8478-3560c8633e8e" >
-		<http:request-connection host="localhost" port="8082" />
-	</http:request-config>
 	<flow name="get-eapiFlow" doc:id="16b9c33b-2fc6-4d87-9cef-215d485c5b2c" >
-		<http:request method="GET" doc:name="Triggers account get method" doc:id="8b2e7906-d437-4c7a-bd97-1d5a1bbc5dfb" config-ref="HTTP_Request_configuration" path="/api/createcomposite">
-			<http:query-params ><![CDATA[#[{
-	createcomposite: attributes.queryParams.accountNumber
-}]]]></http:query-params>
+		<flow-ref doc:name="Flow Reference" doc:id="10fece22-31b0-4188-9fce-27408b1a8e38" name="requestcomponent"/>
+		<ee:transform doc:name="Transform Message" doc:id="b7a8b56d-e33b-4dcd-a7af-a4eda744f0ea" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="requestcomponent" doc:id="b256caa6-c33a-43d4-9880-7f1971e7b721" >
+		<http:request method="GET" doc:name="Triggers account get method" doc:id="8b2e7906-d437-4c7a-bd97-1d5a1bbc5dfb" url="${req.url}${req.endpoint}">
 		</http:request>
-		<logger level="INFO" doc:name="Logger" doc:id="06d1ff3c-874e-4c4d-bbe2-127048f6eac8" />
 	</flow>
 	<flow name="post-eapiFlow" doc:id="f9b194bd-8ffb-4672-84f4-029029f1b942" >
-		<http:request method="POST" doc:name="Triggers account post method" doc:id="b114110c-20e1-407e-b534-f8a447a8c198" config-ref="HTTP_Request_configuration" path="/api/createcomposite"/>
-		<logger level="INFO" doc:name="Logger" doc:id="f1b7109a-7577-40eb-9349-3485599dd816" />
+		<flow-ref doc:name="Flow Reference" doc:id="8868a985-f1c4-49f5-8a2c-b6a4ba164eb9" name="requestcomponent"/>
+		<ee:transform doc:name="Transform Message" doc:id="ceaf8d87-7b4e-4a81-a6e7-2c61e842c6da" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 	<flow name="put-eapiFlow" doc:id="e5217506-b986-461d-b744-a896c44f7010" >
-		<http:request method="PUT" doc:name="Triggers account put method" doc:id="d972d344-00d9-40c2-bddf-940483c43cbf" config-ref="HTTP_Request_configuration" path="/api/createcomposite"/>
-		<logger level="INFO" doc:name="Logger" doc:id="72fc5584-6d6c-41cc-9454-c0dd0225e2eb" />
+		<flow-ref doc:name="Flow Reference" doc:id="8e8653f7-1b6c-4619-82cf-00be44643941" name="requestcomponent"/>
+		<ee:transform doc:name="Transform Message" doc:id="f0ae858f-dbf4-4556-bcef-82f92388597b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 </mule>

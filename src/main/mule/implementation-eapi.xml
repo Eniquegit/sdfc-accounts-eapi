@@ -6,7 +6,7 @@
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<flow name="get-eapiFlow" doc:id="16b9c33b-2fc6-4d87-9cef-215d485c5b2c" >
-		<flow-ref doc:name="Flow Reference" doc:id="10fece22-31b0-4188-9fce-27408b1a8e38" name="reqmethodsFlow"/>
+		<flow-ref doc:name="account-requestflow" doc:id="10fece22-31b0-4188-9fce-27408b1a8e38" name="account-requestflow"/>
 		<ee:transform doc:name="Transform Message" doc:id="b7a8b56d-e33b-4dcd-a7af-a4eda744f0ea" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -17,7 +17,7 @@ payload]]></ee:set-payload>
 		</ee:transform>
 	</flow>
 	<flow name="post-eapiFlow" doc:id="f9b194bd-8ffb-4672-84f4-029029f1b942" >
-		<flow-ref doc:name="Flow Reference" doc:id="8868a985-f1c4-49f5-8a2c-b6a4ba164eb9" name="reqmethodsFlow"/>
+		<flow-ref doc:name="account-requestflow" doc:id="8868a985-f1c4-49f5-8a2c-b6a4ba164eb9" name="account-requestflow"/>
 		<ee:transform doc:name="Transform Message" doc:id="ceaf8d87-7b4e-4a81-a6e7-2c61e842c6da" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -28,7 +28,7 @@ payload]]></ee:set-payload>
 		</ee:transform>
 	</flow>
 	<flow name="put-eapiFlow" doc:id="e5217506-b986-461d-b744-a896c44f7010" >
-		<flow-ref doc:name="Flow Reference" doc:id="8e8653f7-1b6c-4619-82cf-00be44643941" name="reqmethodsFlow"/>
+		<flow-ref doc:name="account-requestflow" doc:id="8e8653f7-1b6c-4619-82cf-00be44643941" name="account-requestflow"/>
 		<ee:transform doc:name="Transform Message" doc:id="f0ae858f-dbf4-4556-bcef-82f92388597b" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
